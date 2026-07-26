@@ -1,0 +1,692 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Imperial College | Premium Portal</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root { 
+            --primary-gradient: linear-gradient(135deg, #6366f1 0%, #a855f7 100%); 
+            --accent-gradient: linear-gradient(135deg, #f43f5e 0%, #fb923c 100%); 
+            --success-gradient: linear-gradient(135deg, #10b981 0%, #34d399 100%); 
+            --bg-color: #f8fafc; 
+            --card-bg: #ffffff; 
+            --text-main: #1e293b; 
+            --text-muted: #64748b; 
+        }
+        body { 
+            font-family: 'Poppins', sans-serif; 
+            background: #e2e8f0; 
+            margin: 0; 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            height: 100vh; 
+        }
+        .app-container { 
+            width: 100%; 
+            max-width: 450px; 
+            background: var(--bg-color); 
+            height: 100vh; 
+            max-height: 850px; 
+            display: flex; 
+            flex-direction: column; 
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1); 
+            position: relative; 
+            border-radius: 30px; 
+            overflow: hidden; 
+        }
+        .login-wrapper { 
+            padding: 40px 30px; 
+            text-align: center; 
+            display: flex; 
+            flex-direction: column; 
+            justify-content: center; 
+            height: 100%; 
+            background: #ffffff; 
+        }
+        .login-wrapper h1 { 
+            background: var(--primary-gradient); 
+            -webkit-background-clip: text; 
+            -webkit-text-fill-color: transparent; 
+            font-size: 34px; 
+            font-weight: 700; 
+            margin-bottom: 5px; 
+        }
+        .input-box { 
+            width: 100%; 
+            padding: 16px; 
+            margin: 10px 0; 
+            border: 2px solid #e2e8f0; 
+            border-radius: 14px; 
+            font-size: 14px; 
+            font-family: 'Poppins', sans-serif;
+            box-sizing: border-box; 
+            transition: all 0.3s ease; 
+            background: #f8fafc; 
+        }
+        .input-box:focus { 
+            border-color: #6366f1; 
+            background: #fff; 
+            outline: none; 
+            box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.1); 
+        }
+        .btn-main { 
+            width: 100%; 
+            padding: 16px; 
+            background: var(--primary-gradient); 
+            color: white; 
+            border: none; 
+            border-radius: 14px; 
+            font-size: 16px; 
+            font-family: 'Poppins', sans-serif;
+            font-weight: 600; 
+            cursor: pointer; 
+            margin-top: 15px; 
+            box-shadow: 0 8px 20px rgba(99, 102, 241, 0.3); 
+            transition: all 0.2s; 
+        }
+        .btn-main:hover { transform: translateY(-2px); box-shadow: 0 10px 25px rgba(99, 102, 241, 0.4); }
+        .btn-main:active { transform: scale(0.98); }
+        .btn-green { background: var(--success-gradient); box-shadow: 0 8px 20px rgba(16, 185, 129, 0.3); }
+        .btn-green:hover { box-shadow: 0 10px 25px rgba(16, 185, 129, 0.4); }
+        .btn-purple { background: linear-gradient(135deg, #8b5cf6 0%, #6d28d9 100%); }
+        .btn-blue { background: linear-gradient(135deg, #0ea5e9 0%, #2563eb 100%); }
+        .btn-red { background: linear-gradient(135deg, #f43f5e 0%, #e11d48 100%); padding: 8px 14px; font-size: 12px; border-radius: 8px; color: white; border: none; cursor: pointer; font-weight: 600;}
+        #mainApp { display: none; height: 100%; flex-direction: column; }
+        .header { background: var(--primary-gradient); color: white; padding: 30px 20px 25px; text-align: center; border-bottom-left-radius: 35px; border-bottom-right-radius: 35px; box-shadow: 0 10px 25px rgba(99, 102, 241, 0.2); z-index: 10; }
+        .header h2 { margin: 0; font-size: 24px; font-weight: 600; }
+        .content-area { flex-grow: 1; overflow-y: auto; padding: 25px 15px 90px 15px; background: var(--bg-color); scrollbar-width: none; }
+        .content-area::-webkit-scrollbar { display: none; }
+        .page { display: none; }
+        .page.active { display: block; animation: fadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1); }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        .section { background: var(--card-bg); padding: 22px; border-radius: 24px; margin-bottom: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.04); border: 1px solid rgba(255,255,255,0.8); }
+        .section h3 { margin-top: 0; color: var(--text-main); font-size: 18px; font-weight: 600; margin-bottom: 15px;}
+        .bottom-nav { position: absolute; bottom: 0; width: 100%; background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(15px); display: flex; justify-content: space-around; padding: 15px 0 20px 0; box-shadow: 0 -10px 30px rgba(0,0,0,0.05); border-top-left-radius: 30px; border-top-right-radius: 30px; z-index: 100; }
+        .nav-item { background: none; border: none; font-size: 12px; color: var(--text-muted); display: flex; flex-direction: column; align-items: center; font-weight: 500; font-family: 'Poppins', sans-serif; cursor: pointer; transition: all 0.3s;}
+        .nav-item.active { color: #6366f1; transform: translateY(-4px); font-weight: 600;}
+        .nav-icon { font-size: 22px; margin-bottom: 4px; }
+        .poster-container { display: flex; overflow-x: auto; gap: 15px; padding-bottom: 10px; scrollbar-width: none; }
+        .poster-container::-webkit-scrollbar { display: none; }
+        .poster-card { min-width: 100%; background: #000; border-radius: 18px; overflow: hidden; box-shadow: 0 10px 25px rgba(0,0,0,0.1); }
+        .poster-img { width: 100%; max-height: 280px; object-fit: contain; display: block;}
+        .poster-title { padding: 12px; margin: 0; text-align: center; font-weight: 500; color: #fff; font-size: 14px; background: linear-gradient(to top, rgba(0,0,0,0.9), rgba(0,0,0,0.3));}
+        .achiever-card { background: #fff; border: 1px solid #f1f5f9; border-radius: 18px; padding: 15px; margin-bottom: 12px; display: flex; align-items: center; box-shadow: 0 8px 20px rgba(0,0,0,0.03); transition: transform 0.2s; }
+        .achiever-img { width: 60px; height: 60px; border-radius: 50%; object-fit: cover; border: 3px solid #10b981; margin-right: 15px; box-shadow: 0 4px 10px rgba(16,185,129,0.2); }
+        .achiever-info h4 { margin: 0 0 4px 0; color: var(--text-main); font-size: 16px; font-weight: 600;}
+        .achiever-info p { margin: 0; color: #10b981; font-weight: 500; font-size: 13px; }
+        .profile-img { width: 90px; height: 90px; background: var(--primary-gradient); border-radius: 50%; margin: 0 auto 15px auto; display: flex; align-items: center; justify-content: center; font-size: 38px; color: white; font-weight: 600; box-shadow: 0 10px 25px rgba(99,102,241,0.3);}
+        .setting-btn { display: block; width: 100%; padding: 16px; margin-bottom: 12px; background: #f1f5f9; border: 1px solid #e2e8f0; border-radius: 14px; text-align: left; font-size: 15px; color: var(--text-main); font-family: 'Poppins', sans-serif; cursor: pointer; font-weight: 500; transition: background 0.2s;}
+        .setting-btn:hover { background: #e2e8f0; }
+        .list-item { background:#f8fafc; padding:16px; margin-bottom:12px; border-radius:16px; border-left: 5px solid #6366f1; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 4px 12px rgba(0,0,0,0.02);}
+        
+        /* Modernized Notes Card */
+        .note-card {
+            background: #ffffff;
+            padding: 16px;
+            border-radius: 16px;
+            border: 1px solid #e2e8f0;
+            border-left: 5px solid #6366f1;
+            margin-bottom: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.02);
+            transition: transform 0.2s;
+        }
+        .note-card:hover { transform: translateY(-2px); }
+        .note-title { font-weight: 600; color: var(--text-main); font-size: 14px; display: flex; align-items: center; gap: 8px;}
+        .note-link { text-decoration: none; color: white; background: var(--primary-gradient); padding: 8px 16px; border-radius: 10px; font-size: 12px; font-weight: 500; box-shadow: 0 4px 10px rgba(99,102,241,0.2); }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <!-- LOGIN SECTION -->
+        <div id="loginSection" class="login-wrapper">
+            <h1>Imperial College</h1>
+            <p style="color: var(--text-muted); margin-bottom: 30px; font-weight: 500;">Premium Universal Portal</p>
+            <input type="text" id="regNo" class="input-box" placeholder="🆔 Enter ID">
+            <input type="password" id="regPass" class="input-box" placeholder="🔒 Enter Password">
+            <button type="button" class="btn-main" onclick="loginUser()">Secure Login 🚀</button>
+        </div>
+
+        <!-- MAIN APP SECTION -->
+        <div id="mainApp">
+            <div class="header" id="appHeader">
+                <h2 id="userName">Welcome</h2>
+                <p style="margin: 5px 0 0; font-size: 13px; opacity: 0.9; font-weight: 300;">ID: <span id="displayRegNo" style="font-weight: 500;"></span></p>
+            </div>
+
+            <div class="content-area">
+                <!-- HOME PAGE -->
+                <div id="page-home" class="page active">
+                    <div class="section" style="background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);">
+                        <h3 style="text-align: center; color: #6366f1;">📢 College Highlights</h3>
+                        <div class="poster-container">
+                            <div class="poster-card">
+                                <img src="1.jpeg" class="poster-img" alt="Poster 1" onerror="this.src='https://via.placeholder.com/400x200?text=Imperial+College'">
+                                <p class="poster-title">Imperial College - Annual Results Showcase</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="section">
+                        <h3 style="text-align: center; color: var(--text-main);">🎓 Proud Alumni</h3>
+                        <p style="text-align: center; color: var(--text-muted); font-size: 12px; margin-top: -8px; margin-bottom: 20px;">Govt. Engineering & Medical Seats</p>
+                        <div>
+                            <div class="achiever-card">
+                                <img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" class="achiever-img" alt="Student">
+                                <div class="achiever-info">
+                                    <h4>Rohan Verma</h4>
+                                    <p>🌟 MBBS at AIIMS Delhi</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ADMIN: MANAGE -->
+                <div id="page-admin-add" class="page">
+                    <div class="section">
+                        <h3>➕ Create New User</h3>
+                        <select id="newUserRole" class="input-box" onchange="toggleFeesInput()">
+                            <option value="student">Student</option>
+                            <option value="teacher">Teacher</option>
+                        </select>
+                        <input type="text" id="newName" class="input-box" placeholder="Full Name">
+                        <input type="text" id="newRegNo" class="input-box" placeholder="Assign ID">
+                        <input type="password" id="newPass" class="input-box" placeholder="Password">
+                        <input type="number" id="newFees" class="input-box" placeholder="Total Fees (₹)">
+                        <button type="button" class="btn-main btn-purple" onclick="createUser()">Create User ✨</button>
+                    </div>
+                </div>
+
+                <!-- ADMIN: DATA & PASSWORDS -->
+                <div id="page-admin-db" class="page">
+                    <div class="section">
+                        <h3>📁 Database & Credentials</h3>
+                        <p style="color: var(--text-muted); font-size: 13px; margin-top: -10px; margin-bottom: 15px;">Manage system accounts and records.</p>
+                        <button type="button" class="btn-main btn-blue" onclick="alert('Google Sheet se check karein.')" style="margin-bottom: 20px;">📥 Access Students Excel Sheet</button>
+                        
+                        <h4 style="color:#6366f1; margin-top:15px; font-weight: 600;">👨‍🎓 Students List</h4>
+                        <div id="adminStudentDatabaseList"></div>
+
+                        <h4 style="color:#8b5cf6; margin-top:20px; font-weight: 600;">👩‍🏫 Teachers List</h4>
+                        <div id="adminTeacherDatabaseList"></div>
+                    </div>
+                </div>
+
+                <!-- ADMIN: FEES -->
+                <div id="page-admin-fees" class="page">
+                    <div class="section">
+                        <h3>📊 College Fees Dashboard</h3>
+                        <div style="display:flex; justify-content:space-between; margin-bottom: 20px; gap: 10px;">
+                            <div style="flex:1; background: #e0e7ff; padding: 15px 10px; text-align: center; border-radius: 16px; border-bottom: 4px solid #6366f1;">
+                                <p style="margin:0; font-size:11px; color:#4f46e5; font-weight:500;">Expected</p>
+                                <h3 style="margin:5px 0; color:#4f46e5; font-size:16px;" id="dashTotal">₹0</h3>
+                            </div>
+                            <div style="flex:1; background: #d1fae5; padding: 15px 10px; text-align: center; border-radius: 16px; border-bottom: 4px solid #10b981;">
+                                <p style="margin:0; font-size:11px; color:#059669; font-weight:500;">Collected</p>
+                                <h3 style="margin:5px 0; color:#059669; font-size:16px;" id="dashPaid">₹0</h3>
+                            </div>
+                            <div style="flex:1; background: #ffe4e6; padding: 15px 10px; text-align: center; border-radius: 16px; border-bottom: 4px solid #f43f5e;">
+                                <p style="margin:0; font-size:11px; color:#e11d48; font-weight:500;">Pending</p>
+                                <h3 style="margin:5px 0; color:#e11d48; font-size:16px;" id="dashPending">₹0</h3>
+                            </div>
+                        </div>
+                        <hr style="border:0; border-top:1px solid #e2e8f0; margin:20px 0;">
+                        <h3>🎓 Student Fee Records</h3>
+                        <div id="adminStudentList"></div>
+                    </div>
+                </div>
+
+                <!-- TEACHER: ATTENDANCE -->
+                <div id="page-teacher-attendance" class="page">
+                    <div class="section">
+                        <h3>📝 Mark Class Attendance</h3>
+                        <input type="date" id="attDate" class="input-box" style="margin-bottom: 15px;">
+                        <div id="teacherStudentList"></div>
+                        <button type="button" id="btnSubmitAtt" class="btn-main btn-green" onclick="submitAttendance()">Save Attendance ✅</button>
+                    </div>
+                </div>
+                
+                <!-- TEACHER: ATTENDANCE REPORT -->
+                <div id="page-teacher-report" class="page">
+                    <div class="section">
+                        <h3>📊 Class Attendance Report</h3>
+                        <p style="color: var(--text-muted); font-size: 13px; margin-top: -10px; margin-bottom: 15px;">View detailed records of all students.</p>
+                        <div id="teacherReportList">Loading report...</div>
+                    </div>
+                </div>
+
+                <!-- ADMIN/TEACHER: UPLOAD NOTES DIRECTLY TO PORTAL -->
+                <div id="page-notes-upload" class="page">
+                    <div class="section" style="background: linear-gradient(135deg, #f0fdf4 0%, #ecfdf5 100%); border: 1px solid #a7f3d0;">
+                        <h3 style="color: #059669;">📤 Upload Study Material</h3>
+                        <p style="color: #10b981; font-size: 13px; margin-top: -10px; margin-bottom: 15px; font-weight: 500;">Upload materials directly to the student portal.</p>
+                        <input type="text" id="noteSubject" class="input-box" placeholder="Subject Name (e.g. Science Chapter 1)">
+                        <input type="text" id="noteLink" class="input-box" placeholder="Google Drive / PDF Link">
+                        <button type="button" class="btn-main btn-green" onclick="uploadNote()">Upload Note 📤</button>
+                    </div>
+                </div>
+
+                <!-- STUDENT: ATTENDANCE -->
+                <div id="page-attendance" class="page">
+                    <div class="section">
+                        <h3>📅 Attendance Report</h3>
+                        <div style="background: #f5f3ff; padding: 20px; border-radius: 18px; margin-bottom: 15px; border-left: 6px solid #8b5cf6;">
+                            <p style="margin:0; color:#4c1d95; font-weight: 500;">Total Attendance: <span id="monthPercent" style="font-size:26px; font-weight:700; color:#7c3aed; float:right;">0%</span></p>
+                        </div>
+                        <h4 style="margin-top:20px; color:var(--text-main); font-weight: 600;">History Log</h4>
+                        <div id="attendanceHistory"></div>
+                    </div>
+                </div>
+
+                <!-- STUDENT: NOTES SECTION -->
+                <div id="page-notes" class="page">
+                    <div id="notesSection" class="section">
+                        <h3>📚 Study Materials</h3>
+                        
+                        <div id="studentNotesList">
+                            <div class="note-card">
+                                <div class="note-title">📘 Mathematics Formula Book</div>
+                                <a href="#" class="note-link">View File</a>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <!-- PROFILE -->
+                <div id="page-profile" class="page">
+                    <div class="section" style="text-align: center;">
+                        <div class="profile-img" id="profileInitials">U</div>
+                        <h3 id="profileName" style="margin-bottom:5px; font-size: 20px;">Loading...</h3>
+                        <p style="color: #6366f1; margin-top: 0; font-weight: 600; font-size: 14px;" id="profileRoleBadge"></p>
+                    </div>
+                    <div class="section">
+                        <h3>⚙️ Account Settings</h3>
+                        <button type="button" class="setting-btn" onclick="location.reload()">🚪 Secure Logout</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- BOTTOM NAVIGATION -->
+            <div class="bottom-nav" id="bottomNav"></div>
+        </div>
+    </div>
+
+    <script>
+        const API_URL = 'https://script.google.com/macros/s/AKfycbzbg_p2xLIuEeqQTLJtPrITs1E9EmYqRbhmz9lgExEUrLq0t3Kwu7eku_8LN9eKS21v/exec'; 
+
+        let loggedInRegNo = null;
+        let loggedInRole = 'student';
+
+        async function fetchData(action, method = 'GET', data = null) {
+            let options = { method: method };
+            if (method === 'POST') {
+                options.headers = { 'Content-Type': 'text/plain' }; 
+                options.body = JSON.stringify(data);
+            }
+            try {
+                const res = await fetch(`${API_URL}?action=${action}`, options);
+                return await res.json();
+            } catch (err) {
+                console.error("Fetch Error:", err);
+                return { status: 'error', message: 'Connection Failed. Check API URL.' };
+            }
+        }
+
+        async function loginUser() {
+            const regNo = document.getElementById('regNo').value;
+            const pass = document.getElementById('regPass').value;
+            if(!regNo || !pass) return alert("Please enter ID and Password!");
+
+            const data = await fetchData('login', 'POST', { register_no: regNo, password: pass });
+
+            if (data.status === 'error' || data.error) {
+                alert("❌ " + (data.message || data.error)); 
+            } else {
+                loggedInRegNo = data.register_no;
+                loggedInRole = data.role; 
+                
+                document.getElementById('loginSection').style.display = 'none';
+                document.getElementById('mainApp').style.display = 'flex';
+                
+                document.getElementById('userName').innerText = (loggedInRole === 'admin' ? 'Admin Portal' : loggedInRole === 'teacher' ? 'Faculty Portal' : 'Welcome, ') + data.name;
+                document.getElementById('displayRegNo').innerText = data.register_no;
+                document.getElementById('profileName').innerText = data.name;
+                document.getElementById('profileInitials').innerText = data.name.charAt(0).toUpperCase();
+                document.getElementById('profileRoleBadge').innerText = "Role: " + loggedInRole.toUpperCase();
+
+                if (loggedInRole === 'admin') { document.getElementById('appHeader').style.background = 'linear-gradient(135deg, #0f172a 0%, #3b82f6 100%)'; }
+                if (loggedInRole === 'teacher') { document.getElementById('appHeader').style.background = 'linear-gradient(135deg, #701a75 0%, #e11d48 100%)'; }
+
+                buildNavigationMenu();
+            }
+        }
+
+        function buildNavigationMenu() {
+            const nav = document.getElementById('bottomNav');
+            let html = `<button type="button" class="nav-item active" id="nav-home" onclick="switchPage('home')"><span class="nav-icon">🏠</span>Home</button>`;
+
+            if (loggedInRole === 'admin') {
+                html += `<button type="button" class="nav-item" id="nav-admin-add" onclick="switchPage('admin-add')"><span class="nav-icon">➕</span>Manage</button>
+                         <button type="button" class="nav-item" id="nav-admin-db" onclick="switchPage('admin-db')"><span class="nav-icon">📁</span>Data</button>
+                         <button type="button" class="nav-item" id="nav-admin-fees" onclick="switchPage('admin-fees')"><span class="nav-icon">📊</span>Fees</button>
+                         <button type="button" class="nav-item" id="nav-notes-upload" onclick="switchPage('notes-upload')"><span class="nav-icon">📤</span>Upload</button>`;
+                loadAdminStudents();
+                loadAdminDatabaseView();
+                loadDashboardStats();
+            } 
+            else if (loggedInRole === 'teacher') {
+                html += `<button type="button" class="nav-item" id="nav-teacher-attendance" onclick="switchPage('teacher-attendance')"><span class="nav-icon">📝</span>Attnd</button>
+                         <button type="button" class="nav-item" id="nav-teacher-report" onclick="switchPage('teacher-report')"><span class="nav-icon">📊</span>Report</button>
+                         <button type="button" class="nav-item" id="nav-notes-upload" onclick="switchPage('notes-upload')"><span class="nav-icon">📤</span>Upload</button>`;
+                loadTeacherStudents();
+                loadTeacherReport();
+            } 
+            else { 
+                html += `<button type="button" class="nav-item" id="nav-attendance" onclick="switchPage('attendance')"><span class="nav-icon">📅</span>Attnd</button>
+                         <button type="button" class="nav-item" id="nav-notes" onclick="switchPage('notes')"><span class="nav-icon">📂</span>Notes</button>`;
+                loadStudentAttendance();
+            }
+            html += `<button type="button" class="nav-item" id="nav-profile" onclick="switchPage('profile')"><span class="nav-icon">👤</span>Profile</button>`;
+            nav.innerHTML = html;
+            switchPage('home');
+        }
+
+        function switchPage(pageId) {
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+            document.getElementById('page-' + pageId).classList.add('active');
+            document.getElementById('nav-' + pageId).classList.add('active');
+        }
+
+        function toggleFeesInput() {
+            const role = document.getElementById('newUserRole').value;
+            document.getElementById('newFees').style.display = role === 'teacher' ? 'none' : 'block';
+        }
+
+        async function createUser() {
+            const payload = {
+                role: document.getElementById('newUserRole').value,
+                name: document.getElementById('newName').value,
+                register_no: document.getElementById('newRegNo').value,
+                password: document.getElementById('newPass').value,
+                total_fees: document.getElementById('newFees').value
+            };
+            if(!payload.name || !payload.register_no || !payload.password) return alert("Please fill required fields!");
+            
+            const result = await fetchData('addUser', 'POST', payload);
+            
+            if(result.status === 'success') {
+                alert(`✅ ${result.message}\n\n🔐 Credentials Saved:\nID: ${result.register_no}\nPassword: ${result.password}`);
+                document.getElementById('newName').value = ''; 
+                document.getElementById('newRegNo').value=''; 
+                document.getElementById('newPass').value='';
+                loadAdminStudents();
+                loadAdminDatabaseView();
+                loadDashboardStats();
+            } else {
+                alert("❌ " + (result.error || result.message));
+            }
+        }
+
+        async function loadDashboardStats() {
+            const data = await fetchData('getStats', 'GET');
+            if(data.error) return;
+            document.getElementById('dashTotal').innerText = "₹" + (data.total_expected || 0);
+            document.getElementById('dashPaid').innerText = "₹" + (data.total_collected || 0);
+            document.getElementById('dashPending').innerText = "₹" + (data.total_pending || 0);
+        }
+
+        async function loadAdminDatabaseView() {
+            const students = await fetchData('getStudents', 'GET');
+            let studentHtml = '';
+            if(students.length === 0 || students.error) {
+                studentHtml = '<p style="color:var(--text-muted); font-size:13px;">No students found.</p>';
+            } else {
+                students.forEach(s => {
+                    studentHtml += `
+                    <div class="list-item" style="flex-direction:column; align-items:start;">
+                        <div style="width:100%; display:flex; justify-content:space-between; margin-bottom:4px;">
+                            <span><strong>${s.name}</strong></span>
+                            <span style="color:#6366f1; font-weight:600;">ID: ${s.register_no}</span>
+                        </div>
+                        <div style="width:100%; display:flex; justify-content:space-between; align-items:center; font-size:13px; color:var(--text-muted);">
+                            <span>Password: <strong style="color:#e11d48;">${s.password}</strong></span>
+                            <button type="button" class="btn-red" onclick="deleteUserRecord('${s.register_no}', 'student', '${s.name}')">🗑️ Delete</button>
+                        </div>
+                    </div>`;
+                });
+            }
+            document.getElementById('adminStudentDatabaseList').innerHTML = studentHtml;
+
+            const teachers = await fetchData('getTeachers', 'GET');
+            let teacherHtml = '';
+            if(teachers.length === 0 || teachers.error) {
+                teacherHtml = '<p style="color:var(--text-muted); font-size:13px;">No teachers found.</p>';
+            } else {
+                teachers.forEach(t => {
+                    teacherHtml += `
+                    <div class="list-item" style="flex-direction:column; align-items:start; border-left-color: #8b5cf6;">
+                        <div style="width:100%; display:flex; justify-content:space-between; margin-bottom:4px;">
+                            <span><strong>${t.name}</strong></span>
+                            <span style="color:#8b5cf6; font-weight:600;">ID: ${t.register_no}</span>
+                        </div>
+                        <div style="width:100%; display:flex; justify-content:space-between; align-items:center; font-size:13px; color:var(--text-muted);">
+                            <span>Password: <strong style="color:#e11d48;">${t.password}</strong></span>
+                            <button type="button" class="btn-red" onclick="deleteUserRecord('${t.register_no}', 'teacher', '${t.name}')">🗑️ Delete</button>
+                        </div>
+                    </div>`;
+                });
+            }
+            document.getElementById('adminTeacherDatabaseList').innerHTML = teacherHtml;
+        }
+
+        async function deleteUserRecord(regNo, role, name) {
+            if(!confirm(`⚠️ Warning: Are you sure you want to PERMANENTLY delete ${name} (${regNo})?`)) {
+                return;
+            }
+
+            const result = await fetchData('deleteUser', 'POST', { register_no: regNo, role: role });
+            
+            if(result.status === 'success') {
+                alert("✅ " + result.message);
+                loadAdminDatabaseView(); 
+                if(role === 'student') {
+                    loadAdminStudents(); 
+                    loadDashboardStats();
+                }
+            } else {
+                alert("❌ Failed: " + (result.message || result.error));
+            }
+        }
+
+        async function loadAdminStudents() {
+            const students = await fetchData('getStudents', 'GET');
+            if(students.error) return;
+            
+            let html = '';
+            students.forEach(s => {
+                let totalFees = s.total_fee ? parseInt(s.total_fee) : 0;
+                let paidFees = s['Paid Fee'] ? parseInt(s['Paid Fee']) : 0;
+                let remainingFees = totalFees - paidFees;
+                if (isNaN(remainingFees)) remainingFees = 0;
+
+                let dueColor = remainingFees > 0 ? '#e11d48' : '#10b981';
+
+                html += `
+                <div class="list-item" style="flex-direction:column; align-items:start; border-left: 6px solid #6366f1; background: #ffffff; border-radius: 16px; padding: 18px; box-shadow: 0 4px 15px rgba(0,0,0,0.02);">
+                    <div style="width:100%; display:flex; justify-content:space-between; margin-bottom:15px; align-items: flex-start;">
+                        <div>
+                            <span style="font-weight:600; font-size:16px; color:var(--text-main); display:block;">${s.name}</span>
+                            <span style="color:var(--text-muted); font-size:13px;">(${s.register_no})</span>
+                            <div style="margin-top: 6px; font-size: 13px; background: #f8fafc; padding: 4px 8px; border-radius: 6px; display: inline-block;">
+                                <span style="color: var(--text-muted);">Total: ₹${totalFees}</span> | 
+                                <span style="color: #10b981; font-weight: 600;">Paid: ₹${paidFees}</span>
+                            </div>
+                        </div>
+                        <div style="text-align: right;">
+                            <span style="color: ${dueColor}; font-weight:700; font-size:18px; display:block;">₹${remainingFees}</span>
+                            <span style="color: ${dueColor}; font-weight:600; font-size:13px;">Due</span>
+                        </div>
+                    </div>
+                    <div style="display:flex; width:100%; gap: 10px;">
+                        <input type="number" id="payInput-${s.register_no}" class="input-box" style="margin:0; flex: 1; padding:12px; border-radius: 12px;" placeholder="Amount">
+                        <button type="button" class="btn-main btn-green" style="margin:0; width: 100px; padding:12px; border-radius: 12px; box-shadow: 0 4px 10px rgba(16, 185, 129, 0.2);" onclick="updateFee('${s.register_no}')">Pay</button>
+                    </div>
+                </div>`;
+            });
+            document.getElementById('adminStudentList').innerHTML = html;
+        }
+
+        // ================= FEE UPDATE FUNCTION ==================
+        async function updateFee(regNo) {
+            const inputVal = document.getElementById(`payInput-${regNo}`).value;
+            const amount = parseFloat(inputVal);
+
+            if(!amount || amount <= 0) {
+                return alert("Please enter a valid amount to pay!");
+            }
+
+            const result = await fetchData('updateFee', 'POST', { register_no: regNo, amount: amount });
+
+            if(result.status === 'success') {
+                alert("✅ Fee updated successfully!");
+                loadAdminStudents();
+                loadDashboardStats();
+            } else {
+                alert("❌ Failed to update fee: " + (result.message || result.error));
+            }
+        }
+
+        // ================= ATTENDANCE MODULE ==================
+
+        async function loadTeacherStudents() {
+            const students = await fetchData('getStudents', 'GET');
+            if(students.error) return;
+            let html = '';
+            students.forEach(s => {
+                html += `<div class="list-item"><span><strong>${s.name}</strong><br><small style="color:var(--text-muted);">${s.register_no}</small></span>
+                    <div>
+                        <label style="font-weight:600; color:#10b981; margin-right: 10px;"><input type="radio" name="att-${s.register_no}" data-name="${s.name}" value="Present" checked> P</label>
+                        <label style="font-weight:600; color:#e11d48;"><input type="radio" name="att-${s.register_no}" data-name="${s.name}" value="Absent"> A</label>
+                    </div>
+                </div>`;
+            });
+            document.getElementById('teacherStudentList').innerHTML = html;
+            document.getElementById('attDate').valueAsDate = new Date();
+        }
+
+        async function submitAttendance() {
+            const date = document.getElementById('attDate').value;
+            if(!date) return alert("Please select a date!");
+            
+            const selectedRadios = document.querySelectorAll('input[type="radio"]:checked');
+            if(selectedRadios.length === 0) return alert("No students to mark!");
+
+            document.getElementById('btnSubmitAtt').innerText = "Saving... ⏳";
+            
+            let records = [];
+            selectedRadios.forEach(radio => {
+                const regNo = radio.name.replace('att-', '');
+                const status = radio.value;
+                const name = radio.getAttribute('data-name');
+                records.push({ name: name, register_no: regNo, status: status });
+            });
+
+            const result = await fetchData('markAttendance', 'POST', { date: date, records: records });
+            
+            document.getElementById('btnSubmitAtt').innerText = "Save Attendance ✅";
+            
+            if(result.status === 'success') {
+                alert("✅ Attendance saved to Google Sheet successfully!");
+            } else {
+                alert("❌ Failed: " + result.message);
+            }
+        }
+
+        async function loadStudentAttendance() {
+            const data = await fetchData(`getAttendance&regNo=${loggedInRegNo}`, 'GET');
+            if(data.error) return;
+            
+            document.getElementById('monthPercent').innerText = (data.percentage || 0) + "%";
+            
+            let histHtml = '';
+            if(data.history.length === 0) {
+                histHtml = '<p style="font-size:14px; color:var(--text-muted);">No attendance records found yet.</p>';
+            } else {
+                data.history.forEach(r => {
+                    const color = r.status === 'Absent' ? '#e11d48' : '#10b981';
+                    histHtml += `<div style="display:flex; justify-content:space-between; padding:15px; border-bottom:1px solid #e2e8f0; font-size:14px;">
+                        <span style="font-weight:500;">📅 ${r.date}</span>
+                        <span style="color:${color}; font-weight:600;">${r.status}</span>
+                    </div>`;
+                });
+            }
+            document.getElementById('attendanceHistory').innerHTML = histHtml;
+        }
+
+        async function loadTeacherReport() {
+            document.getElementById('teacherReportList').innerHTML = '<p style="text-align:center; font-weight:500;">Loading records... ⏳</p>';
+            
+            const reportData = await fetchData('getAllAttendance', 'GET');
+            if(reportData.error) {
+                document.getElementById('teacherReportList').innerHTML = '<p style="color:#e11d48; text-align:center;">Error loading data.</p>';
+                return;
+            }
+            
+            let html = '';
+            if(reportData.length === 0) {
+                html = '<p style="color:var(--text-muted); font-size:13px; text-align:center;">No students found.</p>';
+            } else {
+                reportData.forEach(s => {
+                    let color = s.percentage < 75 ? '#e11d48' : '#10b981';
+                    
+                    html += `
+                    <div class="list-item" style="flex-direction:column; align-items:start; border-left: 5px solid ${color};">
+                        <div style="width:100%; display:flex; justify-content:space-between; margin-bottom:10px;">
+                            <span><strong>${s.name}</strong> <br><small style="color:var(--text-muted);">ID: ${s.register_no}</small></span>
+                            <span style="color:${color}; font-weight:700; font-size:22px;">${s.percentage}%</span>
+                        </div>
+                        <div style="width:100%; display:flex; justify-content:space-between; font-size:12px; background:#fff; padding:12px; border-radius:12px; border: 1px solid #e2e8f0;">
+                            <span style="color:var(--text-main);">Total: <strong>${s.total}</strong></span>
+                            <span style="color:#10b981;">Present: <strong>${s.present}</strong></span>
+                            <span style="color:#e11d48;">Absent: <strong>${s.absent}</strong></span>
+                        </div>
+                    </div>`;
+                });
+            }
+            document.getElementById('teacherReportList').innerHTML = html;
+        }
+
+        // ================= UPLOAD NOTES TO PORTAL (Directly) =================
+
+        function uploadNote() {
+            const sub = document.getElementById('noteSubject').value;
+            const link = document.getElementById('noteLink').value;
+            
+            if(!sub || !link) {
+                return alert("Please enter Subject and File Link!");
+            }
+
+            const noteCard = `
+            <div class="note-card">
+                <div class="note-title">📘 ${sub}</div>
+                <a href="${link}" target="_blank" class="note-link">View File</a>
+            </div>`;
+
+            const notesList = document.getElementById('studentNotesList');
+            notesList.innerHTML = noteCard + notesList.innerHTML;
+
+            alert(`✅ Material for '${sub}' has been directly uploaded to the Student Notes section!`);
+            
+            document.getElementById('noteSubject').value = '';
+            document.getElementById('noteLink').value = '';
+        }
+    </script>
+</body>
+</html>
