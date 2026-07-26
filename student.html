@@ -1,0 +1,916 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Imperial College | Premium Portal</title>
+    <style>
+        :root {
+            --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --accent-gradient: linear-gradient(135deg, #ff6b6b 0%, #ffa502 100%);
+            --success-gradient: linear-gradient(135deg, #2ed573 0%, #26af5f 100%);
+            --bg-color: #f4f6f9;
+            --card-bg: #ffffff;
+            --text-main: #2f3542;
+            --text-muted: #747d8c;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background: #dfe4ea;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .app-container {
+            width: 100%;
+            max-width: 450px;
+            background: var(--bg-color);
+            height: 100vh;
+            max-height: 850px;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+            position: relative;
+            border-radius: 25px;
+            overflow: hidden;
+        }
+
+        /* Premium Login Screen */
+        .login-wrapper {
+            padding: 40px 30px;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            height: 100%;
+            background: linear-gradient(to bottom, #ffffff, #f1f2f6);
+        }
+
+        .login-wrapper h1 {
+            background: var(--primary-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-size: 32px;
+            font-weight: 800;
+            margin-bottom: 5px;
+        }
+
+        .input-box {
+            width: 100%;
+            padding: 15px;
+            margin: 12px 0;
+            border: 2px solid #e4e7eb;
+            border-radius: 12px;
+            font-size: 15px;
+            box-sizing: border-box;
+            transition: all 0.3s ease;
+            background: #fafbfc;
+        }
+
+        .input-box:focus {
+            border-color: #667eea;
+            background: #fff;
+            outline: none;
+            box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
+        }
+
+        .btn-main {
+            width: 100%;
+            padding: 15px;
+            background: var(--primary-gradient);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 15px;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .btn-main:active {
+            transform: scale(0.98);
+        }
+
+        .btn-green {
+            background: var(--success-gradient);
+            box-shadow: 0 4px 15px rgba(46, 213, 115, 0.4);
+        }
+
+        .btn-purple {
+            background: linear-gradient(135deg, #a55eea 0%, #8854d0 100%);
+        }
+
+        .btn-orange {
+            background: var(--accent-gradient);
+            box-shadow: 0 4px 15px rgba(255, 107, 107, 0.4);
+        }
+
+        .btn-blue {
+            background: linear-gradient(135deg, #38ef7d 0%, #11998e 100%);
+        }
+
+        .btn-red {
+            background: linear-gradient(135deg, #ff4757 0%, #ff6b81 100%);
+            padding: 8px 14px;
+            font-size: 12px;
+            border-radius: 8px;
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        #mainApp {
+            display: none;
+            height: 100%;
+            flex-direction: column;
+        }
+
+        /* Vibrant Header */
+        .header {
+            background: var(--primary-gradient);
+            color: white;
+            padding: 25px 20px;
+            text-align: center;
+            border-bottom-left-radius: 30px;
+            border-bottom-right-radius: 30px;
+            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.3);
+            z-index: 10;
+        }
+
+        .header h2 {
+            margin: 0;
+            font-size: 24px;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+        }
+
+        .content-area {
+            flex-grow: 1;
+            overflow-y: auto;
+            padding: 20px 15px 80px 15px;
+            background: var(--bg-color);
+        }
+
+        .page {
+            display: none;
+        }
+
+        .page.active {
+            display: block;
+            animation: fadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(15px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Modern Cards */
+        .section {
+            background: var(--card-bg);
+            padding: 22px;
+            border-radius: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.8);
+        }
+
+        .section h3 {
+            margin-top: 0;
+            color: var(--text-main);
+            font-size: 18px;
+            font-weight: 700;
+        }
+
+        /* Bottom Navigation Bar */
+        .bottom-nav {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            display: flex;
+            justify-content: space-around;
+            padding: 12px 0;
+            box-shadow: 0 -5px 25px rgba(0, 0, 0, 0.08);
+            border-top-left-radius: 25px;
+            border-top-right-radius: 25px;
+            z-index: 100;
+        }
+
+        .nav-item {
+            background: none;
+            border: none;
+            font-size: 11px;
+            color: var(--text-muted);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            font-weight: 600;
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+
+        .nav-item.active {
+            color: #667eea;
+            transform: translateY(-2px);
+        }
+
+        .nav-icon {
+            font-size: 20px;
+            margin-bottom: 4px;
+        }
+
+        /* Posters & Achievers Design */
+        .poster-container {
+            display: flex;
+            overflow-x: auto;
+            gap: 15px;
+            padding-bottom: 10px;
+            scrollbar-width: none;
+        }
+
+        .poster-container::-webkit-scrollbar {
+            display: none;
+        }
+
+        .poster-card {
+            min-width: 100%;
+            background: #000;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        .poster-img {
+            width: 100%;
+            max-height: 280px;
+            object-fit: contain;
+            display: block;
+        }
+
+        .poster-title {
+            padding: 12px;
+            margin: 0;
+            text-align: center;
+            font-weight: bold;
+            color: #fff;
+            font-size: 14px;
+            background: linear-gradient(to top, rgba(0, 0, 0, 0.9), rgba(0, 0, 0, 0.6));
+        }
+
+        .achiever-card {
+            background: #fff;
+            border: 1px solid #f1f2f6;
+            border-radius: 16px;
+            padding: 15px;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.03);
+            transition: transform 0.2s;
+        }
+
+        .achiever-card:hover {
+            transform: translateY(-3px);
+        }
+
+        .achiever-img {
+            width: 65px;
+            height: 65px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid #2ed573;
+            margin-right: 15px;
+            box-shadow: 0 4px 10px rgba(46, 213, 115, 0.3);
+        }
+
+        .achiever-info h4 {
+            margin: 0 0 5px 0;
+            color: var(--text-main);
+            font-size: 16px;
+        }
+
+        .achiever-info p {
+            margin: 0;
+            color: #2ed573;
+            font-weight: bold;
+            font-size: 13px;
+        }
+
+        .profile-img {
+            width: 90px;
+            height: 90px;
+            background: var(--primary-gradient);
+            border-radius: 50%;
+            margin: 0 auto 15px auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 38px;
+            color: white;
+            font-weight: bold;
+            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .setting-btn {
+            display: block;
+            width: 100%;
+            padding: 14px;
+            margin-bottom: 12px;
+            background: #f8f9fa;
+            border: 1px solid #e9ecef;
+            border-radius: 12px;
+            text-align: left;
+            font-size: 15px;
+            color: var(--text-main);
+            cursor: pointer;
+            font-weight: 600;
+            transition: background 0.2s;
+        }
+
+        .setting-btn:hover {
+            background: #e9ecef;
+        }
+
+        .list-item {
+            background: #f8f9fa;
+            padding: 15px;
+            margin-bottom: 12px;
+            border-radius: 14px;
+            border-left: 5px solid #667eea;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.02);
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="app-container">
+        <!-- LOGIN SECTION -->
+        <div id="loginSection" class="login-wrapper">
+            <h1>Imperial College</h1>
+            <p style="color: var(--text-muted); margin-bottom: 25px; font-weight: 500;">Premium Universal Portal</p>
+            <input type="text" id="regNo" class="input-box" placeholder="🆔 Enter ID (e.g. ADMIN123)">
+            <input type="password" id="regPass" class="input-box" placeholder="🔒 Enter Password">
+            <button type="button" class="btn-main" onclick="loginUser()">Secure Login 🚀</button>
+        </div>
+
+        <!-- MAIN APP SECTION -->
+        <div id="mainApp">
+            <div class="header" id="appHeader">
+                <h2 id="userName">Welcome</h2>
+                <p style="margin: 5px 0 0; font-size: 13px; opacity: 0.9;">ID: <span id="displayRegNo"></span></p>
+            </div>
+
+            <div class="content-area">
+                <!-- HOME PAGE -->
+                <div id="page-home" class="page active">
+                    <div class="section" style="background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);">
+                        <h3 style="text-align: center; color: #667eea; margin-bottom: 15px;">📢 College Highlights</h3>
+                        <div id="posterList" class="poster-container"></div>
+                    </div>
+                    <div class="section" style="background: linear-gradient(135deg, #ffffff 0%, #f1f2f6 100%);">
+                        <h3 style="text-align: center; color: #2f3542;">🎓 Proud Alumni</h3>
+                        <p
+                            style="text-align: center; color: var(--text-muted); font-size: 12px; margin-top: -8px; margin-bottom: 20px;">
+                            Govt. Engineering & Medical Seats</p>
+                        <div id="achieversList"></div>
+                    </div>
+                </div>
+
+                <!-- ADMIN: MANAGE -->
+                <div id="page-admin-add" class="page">
+                    <div class="section">
+                        <h3>➕ Create New User</h3>
+                        <select id="newUserRole" class="input-box" onchange="toggleFeesInput()">
+                            <option value="student">Student</option>
+                            <option value="teacher">Teacher</option>
+                        </select>
+                        <input type="text" id="newName" class="input-box" placeholder="Full Name">
+                        <input type="text" id="newRegNo" class="input-box" placeholder="Assign ID">
+                        <input type="password" id="newPass" class="input-box" placeholder="Password">
+                        <input type="number" id="newFees" class="input-box" placeholder="Total Fees (₹)">
+                        <button type="button" class="btn-main btn-purple" onclick="createUser()">Create User ✨</button>
+                    </div>
+
+                    <div class="section"
+                        style="background: linear-gradient(135deg, #e8f8f5 0%, #d1f2eb 100%); border: none;">
+                        <h3 style="color: #11998e;">🖼️ Upload Full Poster/Banner</h3>
+                        <input type="text" id="posterTitle" class="input-box" placeholder="Title (e.g., Board Results)">
+                        <input type="text" id="posterLink" class="input-box" placeholder="Full Image URL Link">
+                        <button type="button" class="btn-main btn-green" onclick="addPoster()">Publish Poster
+                            📌</button>
+                    </div>
+
+                    <div class="section"
+                        style="background: linear-gradient(135deg, #fff9e6 0%, #fff3cd 100%); border: none;">
+                        <h3>🌟 Add Govt. Seat Achiever</h3>
+                        <input type="text" id="achieverName" class="input-box" placeholder="Student Name">
+                        <input type="text" id="achieverScore" class="input-box" placeholder="e.g., MBBS at AIIMS">
+                        <input type="text" id="achieverPhoto" class="input-box" placeholder="Photo URL Link">
+                        <button type="button" class="btn-main btn-orange" onclick="addAchiever()">Add to Alumni
+                            🏆</button>
+                    </div>
+                </div>
+
+                <!-- ADMIN: DATA & PASSWORDS -->
+                <div id="page-admin-db" class="page">
+                    <div class="section">
+                        <h3>📁 Database & Credentials</h3>
+                        <p style="color: var(--text-muted); font-size: 13px; margin-top: -5px;">Manage system accounts
+                            and records.</p>
+                        <button type="button" class="btn-main btn-blue" onclick="exportToExcel()"
+                            style="margin-bottom: 20px;">📥 Download Students Excel Sheet</button>
+
+                        <h4 style="color:#667eea; margin-top:15px;">👨‍🎓 Students List</h4>
+                        <div id="adminStudentDatabaseList"></div>
+
+                        <h4 style="color:#8854d0; margin-top:20px;">👩‍🏫 Teachers List</h4>
+                        <div id="adminTeacherDatabaseList"></div>
+                    </div>
+                </div>
+
+                <!-- ADMIN: FEES -->
+                <div id="page-admin-fees" class="page">
+                    <div class="section">
+                        <h3>📊 College Fees Dashboard</h3>
+                        <div style="display:flex; justify-content:space-between; margin-bottom: 20px; gap: 10px;">
+                            <div
+                                style="flex:1; background: #eef2ff; padding: 12px; text-align: center; border-radius: 14px; border-bottom: 4px solid #667eea;">
+                                <p style="margin:0; font-size:11px; color:var(--text-muted);">Expected</p>
+                                <h3 style="margin:5px 0; color:#667eea; font-size:16px;" id="dashTotal">₹0</h3>
+                            </div>
+                            <div
+                                style="flex:1; background: #f0fdf4; padding: 12px; text-align: center; border-radius: 14px; border-bottom: 4px solid #2ed573;">
+                                <p style="margin:0; font-size:11px; color:var(--text-muted);">Collected</p>
+                                <h3 style="margin:5px 0; color:#2ed573; font-size:16px;" id="dashPaid">₹0</h3>
+                            </div>
+                            <div
+                                style="flex:1; background: #fef2f2; padding: 12px; text-align: center; border-radius: 14px; border-bottom: 4px solid #ff4757;">
+                                <p style="margin:0; font-size:11px; color:var(--text-muted);">Pending</p>
+                                <h3 style="margin:5px 0; color:#ff4757; font-size:16px;" id="dashPending">₹0</h3>
+                            </div>
+                        </div>
+                        <hr style="border:0; border-top:1px solid #eee; margin:15px 0;">
+                        <h3>🎓 Student Fee Records</h3>
+                        <button type="button" class="btn-main btn-orange" onclick="sendAutoReminders()"
+                            style="margin-bottom: 15px;">🔔 Send Fee Reminders</button>
+                        <div id="adminStudentList"></div>
+                    </div>
+                </div>
+
+                <!-- TEACHER: ATTENDANCE -->
+                <div id="page-teacher-attendance" class="page">
+                    <div class="section">
+                        <h3>📝 Mark Class Attendance</h3>
+                        <input type="date" id="attDate" class="input-box" style="margin-bottom: 15px;">
+                        <div id="teacherStudentList"></div>
+                        <button type="button" class="btn-main btn-green" onclick="submitAttendance()">Save Attendance
+                            ✅</button>
+                    </div>
+                </div>
+
+                <!-- UPLOAD NOTES -->
+                <div id="page-notes-upload" class="page">
+                    <div class="section">
+                        <h3>📤 Upload Study Material</h3>
+                        <input type="text" id="noteSubject" class="input-box"
+                            placeholder="Subject Name (e.g. Mathematics)">
+                        <input type="text" id="noteLink" class="input-box" placeholder="Google Drive Link">
+                        <button type="button" class="btn-main" onclick="uploadNote()">Upload Material 📚</button>
+                    </div>
+                </div>
+
+                <!-- STUDENT: ATTENDANCE -->
+                <div id="page-attendance" class="page">
+                    <div class="section">
+                        <h3>📅 Attendance Report</h3>
+                        <div
+                            style="background: #f3f0ff; padding: 15px; border-radius: 14px; margin-bottom: 12px; border-left: 5px solid #8854d0;">
+                            <p style="margin:0; color:#2f3542;">Current Month: <span id="monthPercent"
+                                    style="font-size:22px; font-weight:bold; color:#8854d0; float:right;">0%</span></p>
+                        </div>
+                        <div
+                            style="background: #eef2ff; padding: 15px; border-radius: 14px; margin-bottom: 15px; border-left: 5px solid #667eea;">
+                            <p style="margin:0; color:#2f3542;">Yearly Overall: <span id="yearPercent"
+                                    style="font-size:22px; font-weight:bold; color:#667eea; float:right;">0%</span></p>
+                        </div>
+                        <h4 style="margin-top:20px; color:var(--text-main);">History Log</h4>
+                        <div id="attendanceHistory"></div>
+                    </div>
+                </div>
+
+                <!-- STUDENT: NOTES -->
+                <div id="page-notes" class="page">
+                    <div id="notesSection" class="section">
+                        <h3>📚 Study Materials</h3>
+                        <p style="color:var(--text-muted);">Loading notes...</p>
+                    </div>
+                </div>
+
+                <!-- PROFILE -->
+                <div id="page-profile" class="page">
+                    <div class="section" style="text-align: center;">
+                        <div class="profile-img" id="profileInitials">U</div>
+                        <h3 id="profileName" style="margin-bottom:5px;">Loading...</h3>
+                        <p style="color: #667eea; margin-top: 0; font-weight: 600;" id="profileRoleBadge"></p>
+                    </div>
+                    <div class="section">
+                        <h3>⚙️ Account Settings</h3>
+                        <button type="button" class="setting-btn"
+                            onclick="alert('Password reset link sent to your registered email!')">🔒 Change
+                            Password</button>
+                        <button type="button" class="setting-btn" style="color: #ff4757; background: #fff1f2;"
+                            onclick="location.reload()">🚪 Secure Logout</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- BOTTOM NAVIGATION -->
+            <div class="bottom-nav" id="bottomNav"></div>
+        </div>
+    </div>
+
+    <script>
+        const API_URL = 'http://127.0.0.1:5000';
+        let loggedInUserId = null;
+        let loggedInRole = 'student';
+
+        async function loginUser() {
+            const regNo = document.getElementById('regNo').value;
+            const pass = document.getElementById('regPass').value;
+            if (!regNo || !pass) return alert("Please enter ID and Password!");
+
+            const res = await fetch(`${API_URL}/student/login`, {
+                method: 'POST', headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ register_no: regNo, password: pass })
+            });
+            const data = await res.json();
+
+            if (data.status === 'error') {
+                alert("❌ " + data.message);
+            } else {
+                loggedInUserId = data.user_id;
+                loggedInRole = data.role;
+
+                document.getElementById('loginSection').style.display = 'none';
+                document.getElementById('mainApp').style.display = 'flex';
+
+                document.getElementById('userName').innerText = (loggedInRole === 'admin' ? 'Admin Portal' : loggedInRole === 'teacher' ? 'Faculty Portal' : 'Welcome, ') + data.name;
+                document.getElementById('displayRegNo').innerText = regNo;
+                document.getElementById('profileName').innerText = data.name;
+                document.getElementById('profileInitials').innerText = data.name.charAt(0).toUpperCase();
+                document.getElementById('profileRoleBadge').innerText = "Role: " + loggedInRole.toUpperCase();
+
+                if (loggedInRole === 'admin') { document.getElementById('appHeader').style.background = 'linear-gradient(135deg, #2c3e50 0%, #3498db 100%)'; }
+                if (loggedInRole === 'teacher') { document.getElementById('appHeader').style.background = 'linear-gradient(135deg, #8e44ad 0%, #c0392b 100%)'; }
+
+                buildNavigationMenu();
+                loadHomeData();
+            }
+        }
+
+        function buildNavigationMenu() {
+            const nav = document.getElementById('bottomNav');
+            let html = `<button type="button" class="nav-item active" id="nav-home" onclick="switchPage('home')"><span class="nav-icon">🏠</span>Home</button>`;
+
+            if (loggedInRole === 'admin') {
+                html += `<button type="button" class="nav-item" id="nav-admin-add" onclick="switchPage('admin-add')"><span class="nav-icon">➕</span>Manage</button>
+                         <button type="button" class="nav-item" id="nav-admin-db" onclick="switchPage('admin-db')"><span class="nav-icon">📁</span>Data</button>
+                         <button type="button" class="nav-item" id="nav-admin-fees" onclick="switchPage('admin-fees')"><span class="nav-icon">📊</span>Fees</button>
+                         <button type="button" class="nav-item" id="nav-notes-upload" onclick="switchPage('notes-upload')"><span class="nav-icon">📤</span>Upload</button>`;
+                loadAdminStudents();
+                loadAdminDatabaseView();
+                loadDashboardStats();
+            }
+            else if (loggedInRole === 'teacher') {
+                html += `<button type="button" class="nav-item" id="nav-teacher-attendance" onclick="switchPage('teacher-attendance')"><span class="nav-icon">📝</span>Attnd</button>
+                         <button type="button" class="nav-item" id="nav-notes-upload" onclick="switchPage('notes-upload')"><span class="nav-icon">📤</span>Upload</button>`;
+                loadTeacherStudents();
+            }
+            else {
+                html += `<button type="button" class="nav-item" id="nav-attendance" onclick="switchPage('attendance')"><span class="nav-icon">📅</span>Attnd</button>
+                         <button type="button" class="nav-item" id="nav-notes" onclick="switchPage('notes')"><span class="nav-icon">📂</span>Notes</button>`;
+                loadNotes();
+                loadAttendance();
+            }
+            html += `<button type="button" class="nav-item" id="nav-profile" onclick="switchPage('profile')"><span class="nav-icon">👤</span>Profile</button>`;
+            nav.innerHTML = html;
+            switchPage('home');
+        }
+
+        function switchPage(pageId) {
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+            document.getElementById('page-' + pageId).classList.add('active');
+            document.getElementById('nav-' + pageId).classList.add('active');
+        }
+
+        function loadHomeData() {
+            loadPosters();
+            loadAchievers();
+        }
+
+        async function loadPosters() {
+            const res = await fetch(`${API_URL}/posters`);
+            const data = await res.json();
+            let html = '';
+            if (data.length === 0) {
+                html = `
+                <div class="poster-card">
+                    <img src="3.jpeg" class="poster-img" alt="College Poster" onerror="this.src='3.jpg'">
+                    <p class="poster-title">Imperial College - Annual Results Showcase</p>
+                </div>`;
+            } else {
+                data.forEach(p => {
+                    html += `
+                    <div class="poster-card">
+                        <img src="${p.image_link}" class="poster-img" alt="Poster" onerror="this.src='3.jpeg'">
+                        <p class="poster-title">${p.title}</p>
+                    </div>`;
+                });
+            }
+            document.getElementById('posterList').innerHTML = html;
+        }
+
+        async function loadAchievers() {
+            const res = await fetch(`${API_URL}/achievers`);
+            const data = await res.json();
+            let html = '';
+            if (data.length === 0) {
+                html = '<p style="text-align:center; color:#747d8c; font-size:13px;">No Alumni added yet.</p>';
+            } else {
+                data.forEach(a => {
+                    html += `
+                    <div class="achiever-card">
+                        <img src="${a.photo_link}" class="achiever-img" alt="Student Photo" onerror="this.src='https://cdn-icons-png.flaticon.com/512/3135/3135715.png'">
+                        <div class="achiever-info">
+                            <h4>${a.name}</h4>
+                            <p>🌟 ${a.score_details}</p>
+                        </div>
+                    </div>`;
+                });
+            }
+            document.getElementById('achieversList').innerHTML = html;
+        }
+
+        async function addPoster() {
+            const title = document.getElementById('posterTitle').value;
+            const link = document.getElementById('posterLink').value;
+            if (!title || !link) return alert("Please fill all poster details!");
+
+            await fetch(`${API_URL}/admin/add_poster`, {
+                method: 'POST', headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ title: title, image_link: link })
+            });
+            alert("✅ Poster published successfully!");
+            document.getElementById('posterTitle').value = '';
+            document.getElementById('posterLink').value = '';
+            loadPosters();
+        }
+
+        async function addAchiever() {
+            const name = document.getElementById('achieverName').value;
+            const score = document.getElementById('achieverScore').value;
+            const photo = document.getElementById('achieverPhoto').value;
+            if (!name || !score || !photo) return alert("Please fill all achiever details!");
+
+            await fetch(`${API_URL}/admin/add_achiever`, {
+                method: 'POST', headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ name: name, score_details: score, photo_link: photo })
+            });
+            alert("✅ Alumni added successfully!");
+            document.getElementById('achieverName').value = '';
+            document.getElementById('achieverScore').value = '';
+            document.getElementById('achieverPhoto').value = '';
+            loadAchievers();
+        }
+
+        function toggleFeesInput() {
+            const role = document.getElementById('newUserRole').value;
+            document.getElementById('newFees').style.display = role === 'teacher' ? 'none' : 'block';
+        }
+
+        async function createUser() {
+            const role = document.getElementById('newUserRole').value;
+            const name = document.getElementById('newName').value;
+            const regNo = document.getElementById('newRegNo').value;
+            const pass = document.getElementById('newPass').value;
+            const fees = document.getElementById('newFees').value;
+
+            if (!name || !regNo || !pass) return alert("Please fill required fields!");
+
+            const res = await fetch(`${API_URL}/admin/add_user`, {
+                method: 'POST', headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ role: role, name: name, register_no: regNo, password: pass, total_fees: fees })
+            });
+            const result = await res.json();
+
+            if (res.ok) {
+                alert(`✅ ${result.message}\n\n🔐 Credentials Saved:\nID: ${result.register_no}\nPassword: ${result.password}`);
+                document.getElementById('newName').value = '';
+                document.getElementById('newRegNo').value = '';
+                document.getElementById('newPass').value = '';
+                loadAdminStudents();
+                loadAdminDatabaseView();
+                loadDashboardStats();
+            } else {
+                alert("❌ " + result.error);
+            }
+        }
+
+        async function loadDashboardStats() {
+            const res = await fetch(`${API_URL}/admin/dashboard_stats`);
+            const data = await res.json();
+            document.getElementById('dashTotal').innerText = "₹" + data.total_expected;
+            document.getElementById('dashPaid').innerText = "₹" + data.total_collected;
+            document.getElementById('dashPending').innerText = "₹" + data.total_pending;
+        }
+
+        async function loadAdminDatabaseView() {
+            const resStudents = await fetch(`${API_URL}/admin/students`);
+            const students = await resStudents.json();
+            let studentHtml = '';
+            if (students.length === 0) {
+                studentHtml = '<p style="color:#747d8c; font-size:13px;">No students found.</p>';
+            } else {
+                students.forEach(s => {
+                    studentHtml += `
+                    <div class="list-item" style="flex-direction:column; align-items:start;">
+                        <div style="width:100%; display:flex; justify-content:space-between; margin-bottom:4px;">
+                            <span><strong>${s.name}</strong></span>
+                            <span style="color:#667eea; font-weight:bold;">ID: ${s.register_no}</span>
+                        </div>
+                        <div style="width:100%; display:flex; justify-content:space-between; align-items:center; font-size:13px; color:#747d8c;">
+                            <span>Password: <strong style="color:#ff4757;">${s.password}</strong></span>
+                            <button type="button" class="btn-red" onclick="deleteUser(${s.id}, '${s.name}')">🗑️ Delete</button>
+                        </div>
+                    </div>`;
+                });
+            }
+            document.getElementById('adminStudentDatabaseList').innerHTML = studentHtml;
+
+            const resTeachers = await fetch(`${API_URL}/admin/teachers`);
+            const teachers = await resTeachers.json();
+            let teacherHtml = '';
+            if (teachers.length === 0) {
+                teacherHtml = '<p style="color:#747d8c; font-size:13px;">No teachers found.</p>';
+            } else {
+                teachers.forEach(t => {
+                    teacherHtml += `
+                    <div class="list-item" style="flex-direction:column; align-items:start; border-left-color: #8854d0;">
+                        <div style="width:100%; display:flex; justify-content:space-between; margin-bottom:4px;">
+                            <span><strong>${t.name}</strong></span>
+                            <span style="color:#8854d0; font-weight:bold;">ID: ${t.register_no}</span>
+                        </div>
+                        <div style="width:100%; display:flex; justify-content:space-between; align-items:center; font-size:13px; color:#747d8c;">
+                            <span>Password: <strong style="color:#ff4757;">${t.password}</strong></span>
+                            <button type="button" class="btn-red" onclick="deleteUser(${t.id}, '${t.name}')">🗑️ Delete</button>
+                        </div>
+                    </div>`;
+                });
+            }
+            document.getElementById('adminTeacherDatabaseList').innerHTML = teacherHtml;
+        }
+
+        async function deleteUser(id, name) {
+            if (confirm(`Are you sure you want to permanently delete ${name}?`)) {
+                try {
+                    const res = await fetch(`${API_URL}/admin/delete_user/${id}`, { method: 'DELETE' });
+                    const result = await res.json();
+                    if (res.ok) {
+                        alert("✅ " + result.message);
+                        loadAdminDatabaseView();
+                        loadAdminStudents();
+                        loadDashboardStats();
+                    } else {
+                        alert("❌ " + result.error);
+                    }
+                } catch (error) {
+                    console.error("Error deleting user:", error);
+                    alert("❌ Something went wrong!");
+                }
+            }
+        }
+
+        async function loadAdminStudents() {
+            const res = await fetch(`${API_URL}/admin/students`);
+            const students = await res.json();
+            let html = '';
+            students.forEach(s => {
+                html += `<div class="list-item" style="flex-direction:column; align-items:start;">
+                    <div style="width:100%; display:flex; justify-content:space-between; margin-bottom:10px;">
+                        <span><strong>${s.name}</strong> (${s.register_no})</span>
+                        <span style="color: ${s.remaining_fees > 0 ? '#ff4757' : '#2ed573'}; font-weight:bold;">₹${s.remaining_fees} Due</span>
+                    </div>
+                    <div style="display:flex; width:100%;">
+                        <input type="number" id="payInput-${s.id}" class="input-box" style="margin:0; width:65%; padding:10px;" placeholder="Amount">
+                        <button type="button" class="btn-main btn-green" style="margin:0 0 0 10px; width:35%; padding:10px;" onclick="adminPayFees(${s.id})">Pay</button>
+                    </div>
+                </div>`;
+            });
+            document.getElementById('adminStudentList').innerHTML = html;
+        }
+
+        async function adminPayFees(id) {
+            const amt = parseFloat(document.getElementById(`payInput-${id}`).value);
+            if (!amt) return alert("Please enter amount!");
+            await fetch(`${API_URL}/admin/update_fees/${id}`, {
+                method: 'PUT', headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ amount_paid: amt })
+            });
+            alert("✅ Fee updated successfully!");
+            loadAdminStudents();
+            loadDashboardStats();
+        }
+
+        async function sendAutoReminders() {
+            if (confirm("Send fee reminders to pending students?")) {
+                await fetch(`${API_URL}/admin/send_reminders`, { method: 'POST' });
+                alert("✅ Reminders sent successfully!");
+            }
+        }
+
+        function exportToExcel() {
+            window.open(`${API_URL}/admin/export_excel`, '_blank');
+        }
+
+        let teacherStudents = [];
+        async function loadTeacherStudents() {
+            const res = await fetch(`${API_URL}/admin/students`);
+            teacherStudents = await res.json();
+            let html = '';
+            teacherStudents.forEach(s => {
+                html += `<div class="list-item"><span><strong>${s.name}</strong><br><small style="color:var(--text-muted);">${s.register_no}</small></span>
+                    <div><label style="font-weight:600; color:#2ed573;"><input type="radio" name="att-${s.id}" value="Present" checked> P</label>
+                    <label style="margin-left:8px; font-weight:600; color:#ff4757;"><input type="radio" name="att-${s.id}" value="Absent"> A</label></div></div>`;
+            });
+            document.getElementById('teacherStudentList').innerHTML = html;
+            document.getElementById('attDate').valueAsDate = new Date();
+        }
+
+        async function submitAttendance() {
+            const date = document.getElementById('attDate').value;
+            if (!date) return alert("Please select a date!");
+            let recs = [];
+            teacherStudents.forEach(s => {
+                recs.push({ student_id: s.id, status: document.querySelector(`input[name="att-${s.id}"]:checked`).value });
+            });
+            await fetch(`${API_URL}/teacher/mark_attendance`, {
+                method: 'POST', headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ date: date, records: recs })
+            });
+            alert("✅ Attendance saved successfully!");
+        }
+
+        async function uploadNote() {
+            const sub = document.getElementById('noteSubject').value;
+            const link = document.getElementById('noteLink').value;
+            if (!sub || !link) return alert("Please fill all details!");
+            await fetch(`${API_URL}/admin/upload_note`, {
+                method: 'POST', headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ subject: sub, file_link: link })
+            });
+            alert("✅ Study material uploaded!");
+        }
+
+        async function loadNotes() {
+            const res = await fetch(`${API_URL}/student/notes`);
+            const notes = await res.json();
+            let html = '';
+            notes.forEach(n => { html += `<p style="background:#f8f9fa; padding:12px; border-radius:12px; border-left:4px solid #667eea; margin-bottom:10px;">📘 <strong>${n.subject}</strong> <a href="${n.file_link}" target="_blank" style="float:right; text-decoration:none; color:white; background:linear-gradient(135deg, #667eea, #764ba2); padding:4px 12px; border-radius:6px; font-size:12px; font-weight:600;">View File</a></p>`; });
+            document.getElementById('notesSection').innerHTML += html;
+        }
+
+        async function loadAttendance() {
+            const res = await fetch(`${API_URL}/student/${loggedInUserId}/attendance`);
+            const data = await res.json();
+            document.getElementById('monthPercent').innerText = data.monthly_pct + "%";
+            document.getElementById('yearPercent').innerText = data.yearly_pct + "%";
+            let hist = '';
+            data.details.forEach(r => { hist += `<div style="display:flex; justify-content:space-between; padding:12px; border-bottom:1px solid #eee; font-size:14px;"><span>📅 ${r.date}</span><span style="color:${r.status === 'Absent' ? '#ff4757' : '#2ed573'}; font-weight:bold;">${r.status}</span></div>`; });
+            document.getElementById('attendanceHistory').innerHTML = hist;
+        }
+    </script>
+</body>
+
+</html>
